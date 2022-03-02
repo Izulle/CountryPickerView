@@ -191,13 +191,13 @@ extension CountryPickerViewController {
         tableView.deselectRow(at: indexPath, animated: true)
         let country = isSearchMode ? searchResults[indexPath.row]
             : countries[sectionsTitles[indexPath.section]]![indexPath.row]
-
-        searchController?.isActive = false
-        searchController?.dismiss(animated: false, completion: nil)
         
         let completion = {
             self.countryPickerView.selectedCountry = country
+            self.searchController?.isActive = false
+            self.searchController?.dismiss(animated: false, completion: nil)
         }
+        
         // If this is root, dismiss, else pop
         if navigationController?.viewControllers.count == 1 {
             navigationController?.dismiss(animated: true, completion: completion)
