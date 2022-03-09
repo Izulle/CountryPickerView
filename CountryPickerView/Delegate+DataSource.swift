@@ -8,6 +8,7 @@
 
 import UIKit
 
+@objc
 public protocol CountryPickerViewDelegate: class {
     /// Called when the user selects a country from the list.
     func countryPickerView(_ countryPickerView: CountryPickerView, didSelectCountry country: Country)

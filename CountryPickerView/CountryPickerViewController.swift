@@ -8,7 +8,7 @@
 
 import UIKit
 
-public class CountryPickerViewController: UITableViewController {
+open class CountryPickerViewController: UITableViewController {
 
     public var searchController: UISearchController?
     fileprivate var searchResults = [Country]()

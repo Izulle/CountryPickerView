@@ -14,7 +14,9 @@ public enum SearchBarPosition {
     case tableViewHeader, navigationBar, hidden
 }
 
-public struct Country: Equatable {
+
+
+public class Country: NSObject {
     public let name: String
     public let code: String
     public let phoneCode: String
@@ -26,7 +28,15 @@ public struct Country: Equatable {
         return UIImage(named: "Images/\(code.uppercased())", in: Bundle._module, compatibleWith: nil) ??
             UIImage.init(named: code.uppercased(), in: Bundle._module, compatibleWith: nil)!
     }
+    
+    init (name : String, code: String, phoneCode: String) {
+        self.code = code
+        self.name = name
+        self.phoneCode = phoneCode
+        super.init()
+    }
 }
+
 
 public func ==(lhs: Country, rhs: Country) -> Bool {
     return lhs.code == rhs.code
@@ -94,7 +104,7 @@ public class CountryPickerView: NibView {
     }
     
     weak public var dataSource: CountryPickerViewDataSource?
-    weak public var delegate: CountryPickerViewDelegate?
+    @objc weak public var delegate: CountryPickerViewDelegate?
     weak public var hostViewController: UIViewController?
     
     fileprivate var _selectedCountry: Country?
@@ -123,22 +133,23 @@ public class CountryPickerView: NibView {
     
     func setup() {
         flagImageView.image = selectedCountry.flag
-        countryDetailsLabel.font = font
-        countryDetailsLabel.textColor = textColor
-        if showCountryCodeInView && showPhoneCodeInView {
-            countryDetailsLabel.text = "(\(selectedCountry.code)) \u{202A}\(selectedCountry.phoneCode)\u{202C}"
-        } else if showCountryNameInView && showPhoneCodeInView {
-            countryDetailsLabel.text = "(\(selectedCountry.localizedName() ?? selectedCountry.name)) \u{202A}\(selectedCountry.phoneCode)\u{202C}"
-        } else if showCountryCodeInView || showPhoneCodeInView || showCountryNameInView {
-            countryDetailsLabel.text = showCountryCodeInView ? selectedCountry.code
-                : showPhoneCodeInView ? selectedCountry.phoneCode
-                : selectedCountry.localizedName() ?? selectedCountry.name
-        } else {
-            countryDetailsLabel.text = nil
-        }
+//        countryDetailsLabel.font = font
+//        countryDetailsLabel.textColor = textColor
+//        if showCountryCodeInView && showPhoneCodeInView {
+//            countryDetailsLabel.text = "(\(selectedCountry.code)) \u{202A}\(selectedCountry.phoneCode)\u{202C}"
+//        } else if showCountryNameInView && showPhoneCodeInView {
+//            countryDetailsLabel.text = "(\(selectedCountry.localizedName() ?? selectedCountry.name)) \u{202A}\(selectedCountry.phoneCode)\u{202C}"
+//        } else if showCountryCodeInView || showPhoneCodeInView || showCountryNameInView {
+//            countryDetailsLabel.text = showCountryCodeInView ? selectedCountry.code
+//                : showPhoneCodeInView ? selectedCountry.phoneCode
+//                : selectedCountry.localizedName() ?? selectedCountry.name
+//        } else {
+//            countryDetailsLabel.text = nil
+//        }
     }
     
-    @IBAction func openCountryPickerController(_ sender: Any) {
+    
+    @objc public func openCountryPickerController() {
         if let hostViewController = hostViewController {
             showCountriesList(from: hostViewController)
             return
@@ -151,6 +162,11 @@ public class CountryPickerView: NibView {
                 showCountriesList(from: vc)
             }
         }
+
+    }
+    
+    @IBAction func openCountryPickerController(_ sender: Any) {
+        openCountryPickerController()
     }
     
     public func showCountriesList(from viewController: UIViewController) {
